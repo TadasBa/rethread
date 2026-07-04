@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="lt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#22314f" />
+    <title>Rethread — drabužių taisymas paštu</title>
+    <meta
+      name="description"
+      content="Rethread — drabužių taisymas paštu visoje Lietuvoje. Pasirinkite taisymus, sužinokite kainą iškart, atsiųskite paštomatu ir atgaukite drabužį kaip naują."
+    />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Rethread" />
+    <meta property="og:image" content="/og.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Self-hosted fonts (no external requests) -->
+    <link rel="preload" href="/fonts/bricolage-latin-1.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/hanken-latin-1.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Pereiti prie turinio</a>
+    <div id="app"></div>
+    <noscript>
+      <div style="padding: 2rem; font-family: sans-serif">
+        <h1>Rethread</h1>
+        <p>
+          Drabužių taisymas paštu visoje Lietuvoje. Šiai svetainei reikia
+          įjungto JavaScript. Parašykite mums: labas@rethread.lt
+        </p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
