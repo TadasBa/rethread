@@ -1,0 +1,12 @@
+name = "rethread"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "dist"
+
+# Secrets are set in the Cloudflare Pages dashboard (Settings → Environment
+# variables), NOT here:
+#   RESEND_API_KEY    — API key from resend.com
+#   ORDER_TO_EMAIL    — inbox that receives order requests
+#   ORDER_FROM_EMAIL  — from-address on a domain verified in Resend
+#
+# Local dev:  npm run build && npm run pages:dev
+# (without RESEND_API_KEY the /api/order function logs and returns ok)
