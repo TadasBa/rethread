@@ -29,6 +29,7 @@ import { renderNotFound } from "./pages/notfound";
 import { postBySlug } from "./content/journal";
 
 const app = document.getElementById("app") as HTMLElement;
+document.documentElement.dataset.app = "rethread";
 
 const view = h("main.view#view", { role: "main", tabindex: "-1" });
 app.append(buildNav(), h("div#main", {}, view), buildFooter());
