@@ -28,11 +28,10 @@ const lt = {
   },
 
   common: {
-    from: "nuo",
     eur: "€",
     days: "d. d.", // darbo dienos
     workdays: "darbo dienos",
-    estimate: "Preliminari kaina",
+    estimate: "Kaina",
     total: "Iš viso",
     turnaround: "Terminas",
     next: "Toliau",
@@ -58,8 +57,8 @@ const lt = {
     stat1Value: "3–7 d.d.",
     stat2Label: "Garantija",
     stat2Value: "14 dienų",
-    stat3Label: "Kaina nuo",
-    stat3Value: "5 €",
+    stat3Label: "Kainos",
+    stat3Value: "10–30 €",
   },
 
   // Home: three-step process, woven onto the thread.
@@ -71,7 +70,7 @@ const lt = {
       {
         code: "01",
         title: "Pasirinkite taisymus",
-        body: "Skaičiuoklėje sudėliokite, ką reikia pataisyti. Iškart matote preliminarią kainą ir terminą — be paslėptų mokesčių.",
+        body: "Skaičiuoklėje sudėliokite, ką reikia pataisyti. Iškart matote kainą ir terminą — be paslėptų mokesčių.",
       },
       {
         code: "02",
@@ -102,13 +101,13 @@ const lt = {
   manifesto: {
     eyebrow: "Kodėl taisyti",
     title: "Kiekvienas drabužis turi istoriją. Mes ją pratęsiame.",
-    body: "Greitoji mada moko išmesti. Mes tikime priešingai: gerai pasiūtas daiktas nusipelno antro dygsnio, o ne sąvartyno. Taisymas — ne praeities įprotis, o šiuolaikiškas, atsakingas pasirinkimas.",
-    figure: "Kasmet Lietuvoje išmetama tūkstančiai tonų tekstilės. Vienas pataisytas drabužis — mažiau vieno naujo.",
+    body: "Greitoji mada moko išmesti. Mes tikime priešingai: gerai pasiūtas daiktas nusipelno antro gyvenimo, o ne sąvartyno. Taisymas — ne praeities įprotis, o šiuolaikiškas, atsakingas pasirinkimas.",
+    figure: "Kasmet Lietuvoje išmetama tūkstančiai tonų tekstilės. Kiekvienas pataisytas drabužis yra mažas, bet realus žingsnis prieš perteklinį vartojimą.",
   },
 
   homeCta: {
-    title: "Turite drabužį, kuriam reikia dygsnio?",
-    body: "Sudarykite taisymo sąrašą ir sužinokite kainą iškart.",
+    title: "Turite drabužį, kurį reikia pataisyti?",
+    body: "Pasirinkite taisymo paslaugą ir sužinokite kainą iškart.",
     button: "Pradėti taisymą",
   },
 
@@ -119,7 +118,7 @@ const lt = {
       {
         code: "01",
         title: "Sudarote taisymo sąrašą",
-        body: "Skaičiuoklėje pasirenkate drabužį ir taisymus. Matote preliminarią kainą ir terminą. Galutinę kainą patvirtiname apžiūrėję drabužį — ji niekada nebus didesnė be jūsų sutikimo.",
+        body: "Skaičiuoklėje pasirenkate drabužį ir taisymus. Matote aiškią kainą ir terminą. Jei apžiūrėjus drabužį paaiškėtų, kad reikia papildomo darbo, pirma susisieksime.",
       },
       {
         code: "02",
@@ -154,6 +153,7 @@ const lt = {
     step1: "1 — Koks drabužis?",
     step2: "2 — Ką taisyti?",
     garmentHint: "Pasirinkite drabužio tipą.",
+    lockedServices: "Pirma pasirinkite drabužį.",
     toolHint: "Pasirinkite reikiamus taisymus.",
     placePrompt: "Spustelėkite ant drabužio, kur reikia pataisyti:",
     placeIdle: "Galite pažymėti, kur tiksliai yra problema — tai nebūtina.",
@@ -167,7 +167,7 @@ const lt = {
     remove: "Pašalinti",
     emptyWorksheet: "Kol kas tuščia. Pridėkite pirmą taisymą.",
     worksheetTitle: "Taisymo sąrašas",
-    estimateNote: "Preliminari kaina. Galutinę patvirtiname apžiūrėję drabužį ir tik su jūsų sutikimu.",
+    estimateNote: "Rodoma kaina taikoma pasirinktai paslaugai. Jei reikėtų papildomo, nepasirinkto darbo, pirma susisieksime.",
     cta: "Tęsti į užsakymą",
     ctaEmpty: "Pridėkite bent vieną taisymą",
     liveGarment: "Pasirinktas drabužis",
@@ -233,7 +233,7 @@ const lt = {
     items: [
       {
         q: "Kiek kainuoja taisymas?",
-        a: "Kaina priklauso nuo drabužio ir darbo. Skaičiuoklėje matote preliminarią kainą iškart; galutinę patvirtiname apžiūrėję drabužį ir tik su jūsų sutikimu.",
+        a: "Kaina priklauso nuo drabužio ir darbo. Skaičiuoklėje matote tikslią pasirinktos paslaugos kainą iškart.",
       },
       {
         q: "Kaip pristatyti drabužį?",
@@ -253,7 +253,7 @@ const lt = {
       },
       {
         q: "Kaip apmokėti?",
-        a: "Kortele, per „Paysera“, „PayPal“ arba „Apple Pay“. Mokate tik patvirtinę galutinę kainą.",
+        a: "Kortele, per „Paysera“, „PayPal“ arba „Apple Pay“. Mokate gavę patvirtinimą ir apmokėjimo nuorodą.",
       },
       {
         q: "Ar galioja garantija?",
@@ -279,11 +279,13 @@ const lt = {
 
   contact: {
     title: "Kontaktai",
-    lead: "Klausimai apie taisymą, bendradarbiavimą ar drabužį, kurio likimu abejojate — rašykite.",
+    lead: "Susisiekite su mumis jums patogiu būdu.",
+    phoneLabel: "Telefonas",
+    phone: "+370 62634234",
     emailLabel: "El. paštas",
-    email: "labas@rethread.lt",
-    hoursLabel: "Atsakome",
-    hours: "I–V, 9–17 val. · per 1 darbo dieną",
+    email: "business@rethread.lt",
+    hoursLabel: "Darbo laikas",
+    hours: "I–VI, 09:00–17:00 · VII nedirbame",
     socialLabel: "Sekite",
     photoTitle: "Turite konkretų drabužį?",
     photoBody: "Greičiausias kelias — atsiųskite nuotrauką ir trumpą aprašymą el. paštu. Pasakysime, ar pataisoma ir kiek kainuotų.",
@@ -293,12 +295,12 @@ const lt = {
     tagline: "Antras gyvenimas drabužiams.",
     madeIn: "Sukurta Lietuvoje",
     rights: "Visos teisės saugomos",
-    nav: "Naršymas",
-    legal: "Teisinė informacija",
+    nav: "Nuorodos",
+    legal: "Papildoma informacija",
     privacy: "Privatumo politika",
-    terms: "Paslaugų sąlygos",
+    terms: "Paslaugų teikimo sąlygos",
     shipping: "Siuntimas ir grąžinimas",
-    newsletterTitle: "Retas laiškas apie taisymą",
+    newsletterTitle: "Mūsų naujienlaiškis",
     newsletterBody: "Be spamo. Tik naudingi patarimai ir naujienos.",
     newsletterPlaceholder: "jusu@paštas.lt",
     newsletterCta: "Prenumeruoti",

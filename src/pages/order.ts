@@ -3,7 +3,7 @@
    Collects what the sewer actually needs: garment type + colour, a specific
    note per repair (from each repair's `ask`), the marked location, and photos.
    Posts to the Cloudflare Function /api/order (photos as email attachments).
-   No payment here — Rethread confirms the final price by email.
+   No payment here — Rethread confirms shipping/payment instructions by email.
    ========================================================================== */
 
 import { h } from "../lib/dom";
@@ -15,7 +15,7 @@ import {
   garmentById,
   repairById,
   priceOf,
-  totalFrom,
+  totalPrice,
   turnaroundFor,
   fmtEur,
   type RepairId,
@@ -57,14 +57,14 @@ function summary(): HTMLElement {
       ...repairs.map((rid) =>
         h("li.ordersum__line", {},
           h("span", {}, repairById(rid).label, spots[rid] ? h("span.ordersum__spot", {}, ` · ${describeSpot(spots[rid] as Spot)}`) : null),
-          h("span.num", {}, `${S.common.from} ${fmtEur(priceOf(rid, garment) ?? 0)}`),
+          h("span.num", {}, fmtEur(priceOf(rid, garment) ?? 0)),
         ),
       ),
     ),
     h("div.ordersum__totals", {},
       h("div", {},
         h("span.ordersum__t-label.spec", {}, S.common.estimate),
-        h("span.ordersum__t-value.num", {}, `${S.common.from} ${fmtEur(totalFrom(garment, repairs))}`),
+        h("span.ordersum__t-value.num", {}, fmtEur(totalPrice(garment, repairs))),
       ),
       h("div.ordersum__eta", {},
         h("span.ordersum__t-label.spec", {}, S.common.turnaround),
@@ -125,6 +125,7 @@ function readFile(file: File): Promise<Photo> {
 
 export function renderOrder(): HTMLElement {
   const { garment, repairs, spots } = estimate.get();
+  const hasSelection = garment != null && repairs.length > 0;
 
   const name = textField({ name: "name", label: S.order.fields.name, required: true, autocomplete: "name" });
   const email = textField({ name: "email", label: S.order.fields.email, type: "email", required: true, autocomplete: "email" });
@@ -269,12 +270,12 @@ export function renderOrder(): HTMLElement {
             repairs: garment
               ? repairs.map((rid) => ({
                   label: repairById(rid).label,
-                  from: priceOf(rid, garment),
+                  price: priceOf(rid, garment),
                   detail: detailInputs.get(rid)?.value.trim() || "",
                   location: spots[rid] ? describeSpot(spots[rid] as Spot) : null,
                 }))
               : [],
-            totalFrom: garment ? totalFrom(garment, repairs) : 0,
+            totalPrice: garment ? totalPrice(garment, repairs) : 0,
             turnaround: turnaroundFor(repairs),
           },
           photos: photos.map((p) => ({ name: p.name, type: p.type, base64: p.base64 })),
@@ -324,7 +325,16 @@ export function renderOrder(): HTMLElement {
         h("a.backlink.link-stitch", { href: "/taisymas" }, "← ", S.order.back),
         pageHead({ title: S.order.title, lead: S.order.lead }),
         h("div.order__grid", {},
-          h("div.order__form-col", {}, form),
+          h(
+            "div.order__form-col",
+            {},
+            hasSelection
+              ? form
+              : h("div.ordersum.ordersum--empty.order__empty", {},
+                  h("p", {}, S.order.emptySummary),
+                  h("a.btn.btn--ghost", { href: "/taisymas" }, S.order.toEstimator),
+                ),
+          ),
           h("aside.order__sum-col", {},
             h("h2.order__sum-title", {}, S.order.summaryTitle),
             summary(),

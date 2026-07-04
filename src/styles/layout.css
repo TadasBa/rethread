@@ -10,18 +10,22 @@
      footer. Sits in the left margin, clear of the text column. */
   --spine-top: 172px;
   --spine-bottom: 16vh;
+  --spine-edge: 16px;
+  --spine-offset: 92px;
   top: 0;
-  left: max(20px, calc((100vw - var(--shell)) / 2 - 58px));
+  left: max(var(--spine-edge), calc((100vw - var(--shell)) / 2 - var(--spine-offset)));
   width: 12px;
   height: 100vh;
   z-index: 40;
   pointer-events: none;
   --progress: 0;
   opacity: 1;
-  transition: opacity var(--dur-2) var(--ease);
+  visibility: visible;
+  transition: opacity var(--dur-2) var(--ease), visibility var(--dur-2) var(--ease);
 }
 .spine.is-hidden {
   opacity: 0;
+  visibility: hidden;
 }
 .spine__track {
   position: absolute;

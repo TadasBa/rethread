@@ -1,3 +1,21 @@
 # SPA fallback — every non-asset, non-function path serves the app shell.
 # Cloudflare Pages runs Functions (/api/*) before this rule, so the API is safe.
-/*    /index.html    200
+
+# Legacy Hostinger paths from the first Rethread site.
+/taisymas-uzsakyti        /taisymas    301
+/virsutinedalistaisymas   /taisymas    301
+/apatinedalistaisymas     /taisymas    301
+/vienetiniutaisymas       /taisymas    301
+/service1                 /taisymas    301
+/service2                 /taisymas    301
+/service3                 /taisymas    301
+/service4                 /taisymas    301
+/service5                 /taisymas    301
+/service6                 /taisymas    301
+/service7                 /taisymas    301
+/service8                 /taisymas    301
+/service9                 /taisymas    301
+/service10                /taisymas    301
+/service11                /taisymas    301
+
+/*                       /            200

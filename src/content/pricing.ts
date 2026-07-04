@@ -1,19 +1,41 @@
 /* ============================================================================
    PRICING — single source of truth for the Repair Desk estimator.
 
-   ▸ OWNER: this is the only file you need to edit to change prices, turnaround
-     times, repair names, or which repairs apply to which garment.
-   ▸ All prices are "from" (nuo) figures in EUR and are shown as PRELIMINARY.
-     The final price is confirmed after the garment is inspected. Keep them
-     conservative so a quote is never lower than reality.
-   ▸ `days` is the working-day estimate for that single repair; the estimator
-     shows the longest one across the chosen repairs, clamped to 3–7 d.d.
+   ▸ OWNER: edit this file to change prices, turnaround, repair names, or which
+     repairs apply to which garment.
+   ▸ Prices are fixed customer-facing service prices in EUR.
+   ▸ `days` is kept as internal service metadata. The customer-facing turnaround
+     currently stays fixed at 3–7 d.d. across the estimator and order summary.
    ▸ `ask` is the one thing the sewer most needs to know for that repair — it
      becomes a prompt on the order form so the assignment is unambiguous.
    ========================================================================== */
 
-export type GarmentId = "top" | "bottom" | "dress" | "outerwear";
-export type RepairId = "hem" | "taper" | "zipper" | "patch" | "seam" | "button" | "lining";
+export type GarmentId =
+  | "shirt"
+  | "tshirt"
+  | "knit"
+  | "blazer"
+  | "outerwear"
+  | "trousers"
+  | "leggings"
+  | "skirt"
+  | "shorts"
+  | "dress"
+  | "jumpsuit";
+
+export type RepairId =
+  | "bottom-hem"
+  | "sleeve-shortening"
+  | "shortening"
+  | "leg-taper"
+  | "waist-taper"
+  | "strap-shortening"
+  | "jumpsuit-leg-shortening"
+  | "side-taper"
+  | "zipper"
+  | "hole-seam"
+  | "seam"
+  | "button";
 
 export interface Garment {
   id: GarmentId;
@@ -25,7 +47,7 @@ export interface Repair {
   id: RepairId;
   label: string;
   desc: string;
-  /** From-price per garment class (EUR). Omit a garment where it doesn't apply. */
+  /** Fixed price per garment class (EUR). Omit a garment where it doesn't apply. */
   price: Partial<Record<GarmentId, number>>;
   /** Working days for this repair alone. */
   days: number;
@@ -34,68 +56,126 @@ export interface Repair {
 }
 
 export const GARMENTS: Garment[] = [
-  { id: "top", label: "Marškiniai, megztiniai", desc: "Marškiniai, palaidinės, megztiniai, švarkeliai" },
-  { id: "bottom", label: "Kelnės, sijonai", desc: "Kelnės, džinsai, sijonai, šortai" },
-  { id: "dress", label: "Suknelės", desc: "Suknelės, sarafanai, kombinezonai" },
-  { id: "outerwear", label: "Paltai, striukės", desc: "Paltai, striukės su pamušalu, švarkai" },
+  { id: "shirt", label: "Marškiniai", desc: "Ilgomis rankovėmis, sagomis arba be jų" },
+  { id: "tshirt", label: "Marškinėliai", desc: "Trumpomis rankovėmis, trikotažas" },
+  { id: "knit", label: "Megztinis / džemperis", desc: "Megztiniai, džemperiai, tamprus trikotažas" },
+  { id: "blazer", label: "Švarkas", desc: "Lengvas švarkas, kostiumo viršus" },
+  { id: "outerwear", label: "Striukė / paltas", desc: "Lauko drabužiai, storesni sluoksniai" },
+  { id: "trousers", label: "Kelnės", desc: "Kelnės ir džinsai" },
+  { id: "leggings", label: "Tamprės", desc: "Elastingos kelnės, sportinis trikotažas" },
+  { id: "skirt", label: "Sijonas", desc: "Mini, midi, su pamušalu arba be jo" },
+  { id: "shorts", label: "Šortai", desc: "Trumpos kelnės, džinsiniai ar medvilniniai" },
+  { id: "dress", label: "Suknelė", desc: "Suknelės ir sarafanai" },
+  { id: "jumpsuit", label: "Kombinezonas", desc: "Vienos dalies drabužis su petnešomis ar rankovėmis" },
 ];
 
 export const REPAIRS: Repair[] = [
   {
-    id: "hem",
+    id: "bottom-hem",
+    label: "Apačios lenkimas",
+    desc: "Drabužio apačios palenkimas ir sutvirtinimas",
+    price: { shirt: 15, tshirt: 15, knit: 15, blazer: 15 },
+    days: 3,
+    ask: "Kiek palenkti apačią? Pvz. „3 cm“.",
+  },
+  {
+    id: "sleeve-shortening",
+    label: "Rankovių trumpinimas",
+    desc: "Rankovių trumpinimas išsaugant tvarkingą kraštą",
+    price: { shirt: 15, tshirt: 15, knit: 10, blazer: 15, outerwear: 15, dress: 15 },
+    days: 3,
+    ask: "Kiek trumpinti rankoves? Pvz. „5 cm“ arba „iki riešo“.",
+  },
+  {
+    id: "shortening",
     label: "Trumpinimas",
-    desc: "Klešnės, rankovės ar apačios sutrumpinimas išsaugant originalų kraštą",
-    price: { top: 14, bottom: 12, dress: 18, outerwear: 20 },
+    desc: "Kelnių, sijono, šortų ar suknelės ilgio trumpinimas",
+    price: { trousers: 15, leggings: 15, skirt: 15, shorts: 15, dress: 15 },
     days: 3,
     ask: "Kiek sutrumpinti? Pvz. „5 cm“ arba „iki kulkšnies“.",
   },
   {
-    id: "taper",
-    label: "Siaurinimas",
-    desc: "Drabužio susiaurinimas pagal figūrą",
-    price: { top: 20, bottom: 18, dress: 26, outerwear: 30 },
+    id: "leg-taper",
+    label: "Klešnių siaurinimas",
+    desc: "Kelnių ar šortų klešnių susiaurinimas",
+    price: { trousers: 20, shorts: 20 },
     days: 4,
-    ask: "Kur ir kiek susiaurinti? Pvz. „klešnes per 2 cm“.",
+    ask: "Kur ir kiek siaurinti klešnes? Pvz. „nuo kelio per 2 cm“.",
+  },
+  {
+    id: "waist-taper",
+    label: "Siaurinimas per juosmenį",
+    desc: "Juosmens susiaurinimas pagal figūrą",
+    price: { trousers: 20, skirt: 20, shorts: 20 },
+    days: 4,
+    ask: "Kiek siaurinti per juosmenį? Pvz. „2 cm“.",
+  },
+  {
+    id: "strap-shortening",
+    label: "Petnešų trumpinimas",
+    desc: "Petnešų ar petnešėlių trumpinimas",
+    price: { dress: 15, jumpsuit: 15 },
+    days: 3,
+    ask: "Kiek trumpinti petnešas? Pvz. „2 cm“.",
+  },
+  {
+    id: "jumpsuit-leg-shortening",
+    label: "Kelnių dalies trumpinimas",
+    desc: "Kombinezono kelnių dalies ilgio trumpinimas",
+    price: { jumpsuit: 15 },
+    days: 3,
+    ask: "Kiek trumpinti kelnių dalį? Pvz. „5 cm“.",
+  },
+  {
+    id: "side-taper",
+    label: "Siaurinimas per šonus",
+    desc: "Drabužio susiaurinimas per šonus pagal figūrą",
+    price: { shirt: 20, tshirt: 20, knit: 20, blazer: 20, outerwear: 20, dress: 20, jumpsuit: 20 },
+    days: 4,
+    ask: "Kur ir kiek siaurinti per šonus? Pvz. „liemens srityje per 2 cm“.",
   },
   {
     id: "zipper",
-    label: "Užtrauktukas",
-    desc: "Užtrauktuko ar slankiklio keitimas / taisymas",
-    price: { top: 18, bottom: 16, dress: 22, outerwear: 28 },
+    label: "Užtrauktuko keitimas",
+    desc: "Užtrauktuko keitimas arba taisymas",
+    price: { knit: 17, outerwear: 30, trousers: 30, skirt: 30, shorts: 30, dress: 30, jumpsuit: 30 },
     days: 4,
     ask: "Kur yra užtrauktukas, kokia jo spalva ir apytikslis ilgis?",
   },
   {
-    id: "patch",
-    label: "Skylė ar plyšys",
-    desc: "Nematomas taisymas arba matomas „boro“ lopinys",
-    price: { top: 12, bottom: 12, dress: 14, outerwear: 16 },
+    id: "hole-seam",
+    label: "Skylių / siūlių tvarkymas",
+    desc: "Skylės, plyšio arba iširusios siūlės sutvarkymas",
+    price: {
+      shirt: 20,
+      tshirt: 20,
+      knit: 20,
+      outerwear: 20,
+      trousers: 25,
+      leggings: 20,
+      skirt: 20,
+      shorts: 20,
+      dress: 20,
+      jumpsuit: 20,
+    },
     days: 3,
-    ask: "Skylės dydis ir vieta. Nematomas taisymas ar matomas lopinys?",
+    ask: "Kur yra skylė ar siūlė? Nurodykite dydį ir vietą.",
   },
   {
     id: "seam",
-    label: "Siūlė",
-    desc: "Išsiuvusios ar prakiurusios siūlės sutvirtinimas",
-    price: { top: 10, bottom: 10, dress: 12, outerwear: 14 },
-    days: 2,
-    ask: "Kurios siūlės išsiuvusios?",
+    label: "Siūlių sutvarkymas",
+    desc: "Iširusios ar prakiurusios siūlės sutvirtinimas",
+    price: { blazer: 20 },
+    days: 3,
+    ask: "Kurios siūlės iširusios?",
   },
   {
     id: "button",
-    label: "Sagos",
-    desc: "Sagų prisiuvimas ar keitimas, kilpelės taisymas",
-    price: { top: 5, bottom: 5, dress: 5, outerwear: 6 },
+    label: "Sagų tvirtinimas / keitimas",
+    desc: "Sagų prisiuvimas, tvirtinimas arba keitimas",
+    price: { shirt: 25, knit: 25, blazer: 25, outerwear: 25, trousers: 25, shorts: 25, dress: 25, jumpsuit: 25 },
     days: 2,
     ask: "Kiek sagų? Ar turite atsargines?",
-  },
-  {
-    id: "lining",
-    label: "Pamušalas",
-    desc: "Pamušalo taisymas ar keitimas",
-    price: { dress: 30, outerwear: 35 },
-    days: 6,
-    ask: "Kokia pamušalo problema ir kurioje vietoje?",
   },
 ];
 
@@ -116,17 +196,14 @@ export function priceOf(repair: RepairId, garment: GarmentId): number | null {
   return repairById(repair).price[garment] ?? null;
 }
 
-/** From-total for a set of repairs on a garment. */
-export function totalFrom(garment: GarmentId, repairs: RepairId[]): number {
+/** Total fixed price for a set of repairs on a garment. */
+export function totalPrice(garment: GarmentId, repairs: RepairId[]): number {
   return repairs.reduce((sum, r) => sum + (priceOf(r, garment) ?? 0), 0);
 }
 
-/** Combined turnaround (longest single repair), clamped to the 3–7 d.d. window. */
-export function turnaroundFor(repairs: RepairId[]): [number, number] {
-  if (repairs.length === 0) return [3, 7];
-  const longest = Math.max(...repairs.map((r) => repairById(r).days));
-  const lo = Math.min(Math.max(3, longest - 1), 6);
-  return [lo, Math.max(lo + 1, Math.min(7, longest + 2))];
+/** Current customer-facing turnaround promise. */
+export function turnaroundFor(_repairs: RepairId[]): [number, number] {
+  return [3, 7];
 }
 
 export const fmtEur = (n: number): string => `${n} €`;

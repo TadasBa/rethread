@@ -3,7 +3,7 @@
 
    Flow: pick a garment → add repairs (click) → optionally mark WHERE each
    problem is on the garment (click to drop a numbered pin, drag to reposition)
-   → a live worksheet totals a preliminary "from" price + turnaround, then hands
+   → a live worksheet totals the fixed service price + turnaround, then hands
    off to the order form. State lives in the estimate store so it survives
    navigation and prefills the order.
 
@@ -17,12 +17,11 @@ import { S } from "../../i18n/strings";
 import { estimate } from "../../lib/store";
 import {
   GARMENTS,
-  REPAIRS,
   garmentById,
   repairById,
   repairsFor,
   priceOf,
-  totalFrom,
+  totalPrice,
   turnaroundFor,
   fmtEur,
   type GarmentId,
@@ -103,9 +102,13 @@ export function buildEstimator(pendingAdd?: RepairId): HTMLElement {
   function renderTray(): void {
     clear(trayEl);
     const { garment } = estimate.get();
-    const list = garment ? repairsFor(garment) : REPAIRS;
+    if (!garment) {
+      trayEl.appendChild(h("p.tray__empty", {}, S.estimator.lockedServices));
+      return;
+    }
+    const list = repairsFor(garment);
     for (const r of list) {
-      const price = garment ? priceOf(r.id, garment) : null;
+      const price = priceOf(r.id, garment);
       const active = estimate.hasRepair(r.id);
       const tool = h(
         "button.tool",
@@ -121,7 +124,7 @@ export function buildEstimator(pendingAdd?: RepairId): HTMLElement {
         h(
           "span.tool__price.num",
           {},
-          garment ? (price != null ? `${S.common.from} ${fmtEur(price)}` : "—") : `${S.common.from} …`,
+          price != null ? fmtEur(price) : "—",
         ),
       );
       tool.classList.toggle("is-active", active);
@@ -147,13 +150,13 @@ export function buildEstimator(pendingAdd?: RepairId): HTMLElement {
     renderAll();
     const label = repairById(id).label;
     announce(
-      `${label} ${wasActive ? S.estimator.removed : S.estimator.added}. ${S.common.total} ${S.common.from} ${fmtEur(currentTotal())}`,
+      `${label} ${wasActive ? S.estimator.removed : S.estimator.added}. ${S.common.total} ${fmtEur(currentTotal())}`,
     );
   }
 
   const currentTotal = (): number => {
     const { garment, repairs } = estimate.get();
-    return garment ? totalFrom(garment, repairs) : 0;
+    return garment ? totalPrice(garment, repairs) : 0;
   };
 
   function startPlacing(id: RepairId): void {
@@ -184,14 +187,19 @@ export function buildEstimator(pendingAdd?: RepairId): HTMLElement {
     // Hint / cursor state
     dropZone.classList.toggle("is-placing", placing != null && garment != null);
     if (!garment) {
-      deskHint.textContent = S.estimator.garmentHint;
+      deskHint.hidden = true;
+      deskHint.textContent = "";
     } else if (placing) {
+      deskHint.hidden = false;
       deskHint.textContent = `${S.estimator.placePrompt} ${repairById(placing).label.toLowerCase()}`;
     } else if (repairs.some((r) => !spots[r])) {
+      deskHint.hidden = false;
       deskHint.textContent = S.estimator.placeIdle;
     } else if (repairs.length) {
+      deskHint.hidden = false;
       deskHint.textContent = S.estimator.placeDone;
     } else {
+      deskHint.hidden = false;
       deskHint.textContent = S.estimator.toolHint;
     }
   }
@@ -274,7 +282,7 @@ export function buildEstimator(pendingAdd?: RepairId): HTMLElement {
               placed ? S.estimator.placedChange : S.estimator.placeAction,
             ),
           ),
-          h("span.worksheet__line-price.num", {}, price != null ? `${S.common.from} ${fmtEur(price)}` : "—"),
+          h("span.worksheet__line-price.num", {}, price != null ? fmtEur(price) : "—"),
           h(
             "button.worksheet__remove",
             {
@@ -291,7 +299,7 @@ export function buildEstimator(pendingAdd?: RepairId): HTMLElement {
       worksheetEl.appendChild(list);
     }
 
-    totalPriceEl.textContent = `${S.common.from} ${fmtEur(currentTotal())}`;
+    totalPriceEl.textContent = fmtEur(currentTotal());
     const [lo, hi] = turnaroundFor(repairs);
     totalDaysEl.textContent = `${lo}–${hi} ${S.common.days}`;
 
@@ -349,6 +357,7 @@ export function buildEstimator(pendingAdd?: RepairId): HTMLElement {
     "aside.worksheet",
     { "aria-label": S.estimator.worksheetTitle },
     h("h2.est__step.spec", {}, S.estimator.step2),
+    h("div.est__step-spacer", { "aria-hidden": "true" }),
     trayEl,
     h("div.worksheet__panel", {},
       h("h3.worksheet__title", {}, S.estimator.worksheetTitle),

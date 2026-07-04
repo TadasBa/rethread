@@ -14,7 +14,7 @@ Boro (japoniškai — „skarmalai“) atsirado tarp valstiečių, kurie tą pat
 ## Kodėl tai svarbu ir šiandien
 
 - Matomas taisymas nieko neslepia — jis pasakoja, kad daiktu rūpinamasi.
-- Kiekvienas lopinys individualus, tad drabužis tampa vienetinis.
+- Kiekvienas lopinys individualus, tad drabužis tampa unikalus.
 - Tai priešnuodis greitajai madai, kur viskas vienoda ir laikina.
 
 > Dygsnis, kurio nesimato, atkuria drabužį. Dygsnis, kurį matai, suteikia jam naują charakterį.

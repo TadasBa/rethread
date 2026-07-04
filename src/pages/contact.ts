@@ -12,6 +12,7 @@ export function renderContact(): HTMLElement {
         pageHead({ title: S.contact.title, lead: S.contact.lead }),
         h("div.contact__grid", {},
           h("div.contact__rows", { "data-reveal": true },
+            row(S.contact.phoneLabel, h("a.link-stitch", { href: `tel:${S.contact.phone.replace(/\s/g, "")}` }, S.contact.phone)),
             row(S.contact.emailLabel, h("a.link-stitch", { href: `mailto:${S.contact.email}` }, S.contact.email)),
             row(S.contact.hoursLabel, h("span", {}, S.contact.hours)),
             row(S.contact.socialLabel,

@@ -15,6 +15,7 @@ export interface RouteContext {
 export interface RouteMeta {
   title: string;
   description: string;
+  robots?: string;
 }
 
 export interface Route {
@@ -29,6 +30,8 @@ interface CompiledRoute extends Route {
 }
 
 const SITE = "Rethread";
+const SITE_ORIGIN = "https://rethread.lt";
+const DEFAULT_IMAGE = `${SITE_ORIGIN}/og.svg`;
 
 function compile(pattern: string): { regex: RegExp; keys: string[] } {
   const keys: string[] = [];
@@ -123,10 +126,15 @@ export class Router {
     const meta = route.meta(ctx);
     document.title = ctx.path === "/" ? `${SITE} — ${meta.title}` : `${meta.title} · ${SITE}`;
     setMeta("description", meta.description);
+    setMeta("robots", meta.robots ?? "index, follow");
     setMeta("og:title", document.title, "property");
     setMeta("og:description", meta.description, "property");
-    setMeta("og:url", location.origin + ctx.path, "property");
-    setCanonical(location.origin + ctx.path);
+    setMeta("og:url", SITE_ORIGIN + ctx.path, "property");
+    setMeta("og:image", DEFAULT_IMAGE, "property");
+    setMeta("twitter:title", document.title);
+    setMeta("twitter:description", meta.description);
+    setMeta("twitter:image", DEFAULT_IMAGE);
+    setCanonical(SITE_ORIGIN + ctx.path);
 
     const view = await route.render(ctx);
     const swap = (): void => {

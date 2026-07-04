@@ -20,18 +20,33 @@ export function initSpine(): void {
   );
   document.body.appendChild(spine);
   const view = document.getElementById("view");
+  let railTop = 172;
+
+  const isHomePath = (path = location.pathname): boolean =>
+    (path.replace(/\/+$/, "") || "/") === "/";
+
+  const syncVisibility = (path = location.pathname): boolean => {
+    const visible = isHomePath(path);
+    spine.classList.toggle("is-hidden", !visible);
+    return visible;
+  };
 
   // Align the rail's start with the first eyebrow/heading of the current page.
   const measureTop = (): void => {
+    if (!syncVisibility()) return;
     const el = view?.querySelector<HTMLElement>(".eyebrow, .hero__title, .pagehead__title, h1");
     if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY;
-      spine.style.setProperty("--spine-top", `${Math.round(top)}px`);
+      railTop = Math.max(92, Math.round(el.getBoundingClientRect().top));
+      spine.style.setProperty("--spine-top", `${railTop}px`);
     }
   };
 
   let ticking = false;
   const update = (): void => {
+    if (!syncVisibility()) {
+      ticking = false;
+      return;
+    }
     // Progress runs from the top of the page to the start of the footer — the
     // spine completes at the last content section, not in the footer.
     const footer = document.querySelector(".footer");
@@ -46,7 +61,10 @@ export function initSpine(): void {
     // bottom so it never draws over the footer once the footer is on screen.
     const defaultBottom = window.innerHeight * 0.16;
     const overlap = footerRect ? window.innerHeight - footerRect.top + 24 : 0;
-    spine.style.setProperty("--spine-bottom", `${Math.round(Math.max(defaultBottom, overlap))}px`);
+    const minVisibleRail = 88;
+    const maxBottom = Math.max(defaultBottom, window.innerHeight - railTop - minVisibleRail);
+    const bottom = Math.min(maxBottom, Math.max(defaultBottom, overlap));
+    spine.style.setProperty("--spine-bottom", `${Math.round(bottom)}px`);
     ticking = false;
   };
   const onScroll = (): void => {
@@ -58,12 +76,15 @@ export function initSpine(): void {
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll, { passive: true });
   // Recompute after each route render (heading position + page height change).
-  document.addEventListener("route:rendered", () =>
+  document.addEventListener("route:rendered", (event) =>
     requestAnimationFrame(() => {
+      const path = event instanceof CustomEvent ? event.detail?.path : location.pathname;
+      if (!syncVisibility(path)) return;
       measureTop();
       update();
     }),
   );
+  syncVisibility();
   measureTop();
   update();
 }

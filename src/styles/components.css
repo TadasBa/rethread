@@ -515,7 +515,8 @@
   border-radius: var(--radius);
   display: grid;
   gap: var(--sp-2);
-  align-content: start;
+  align-content: center;
+  min-height: 100%;
 }
 .contact__photo p {
   color: var(--thread-soft);
@@ -610,10 +611,26 @@
 /* ============================ PROSE / LEGAL ========================== */
 .prose {
   display: grid;
-  gap: var(--sp-2);
+  gap: var(--sp-4);
   max-width: var(--measure);
 }
+.prose__section {
+  display: grid;
+  gap: var(--sp-2);
+}
+.prose h2 {
+  font-size: var(--step-1);
+  line-height: 1.2;
+  margin-top: var(--sp-1);
+}
 .prose p {
+  color: var(--ink-soft);
+}
+.prose ul {
+  display: grid;
+  gap: var(--sp-1);
+  margin: 0;
+  padding-left: 1.1rem;
   color: var(--ink-soft);
 }
 

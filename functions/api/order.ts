@@ -8,7 +8,7 @@
 
    Required environment variables (set in the Cloudflare Pages dashboard):
      RESEND_API_KEY   API key from resend.com
-     ORDER_TO_EMAIL   inbox that receives order requests (e.g. labas@rethread.lt)
+     ORDER_TO_EMAIL   inbox that receives order requests (e.g. business@rethread.lt)
      ORDER_FROM_EMAIL from address on a verified domain (e.g. uzsakymai@rethread.lt)
    ========================================================================== */
 
@@ -20,7 +20,8 @@ interface Env {
 
 interface RepairLine {
   label: string;
-  from: number | null;
+  price?: number | null;
+  from?: number | null;
   detail?: string;
   location?: string | null;
 }
@@ -43,6 +44,7 @@ interface OrderPayload {
     garment?: string | null;
     garmentId?: string | null;
     repairs?: RepairLine[];
+    totalPrice?: number;
     totalFrom?: number;
     turnaround?: [number, number];
   };
@@ -93,7 +95,8 @@ export const onRequestPost = async (context: {
 
   const repairBlocks = repairs
     .map((r) => {
-      const meta = [r.location ? `vieta: ${r.location}` : null, r.from != null ? `nuo ${r.from} €` : null]
+      const price = r.price ?? r.from;
+      const meta = [r.location ? `vieta: ${r.location}` : null, price != null ? `${price} €` : null]
         .filter(Boolean)
         .join(" · ");
       return (
@@ -107,6 +110,7 @@ export const onRequestPost = async (context: {
     .join("");
 
   const turn = est.turnaround ? `${est.turnaround[0]}–${est.turnaround[1]} d. d.` : "—";
+  const total = est.totalPrice ?? est.totalFrom ?? 0;
 
   const adminHtml = `
     <div style="font-family:system-ui,sans-serif;max-width:600px">
@@ -126,7 +130,7 @@ export const onRequestPost = async (context: {
       </table>
       <h3 style="margin:16px 0 8px">Taisymai</h3>
       ${repairBlocks || "<p>—</p>"}
-      <p style="font-family:monospace"><strong>Preliminari kaina:</strong> nuo ${est.totalFrom ?? 0} € &nbsp;·&nbsp; <strong>Terminas:</strong> ${turn}</p>
+      <p style="font-family:monospace"><strong>Kaina:</strong> ${total} € &nbsp;·&nbsp; <strong>Terminas:</strong> ${turn}</p>
       <h3 style="margin:16px 0 4px">Papildoma pastaba</h3>
       <p style="white-space:pre-wrap">${safe(body.notes)}</p>
       ${Array.isArray(body.photos) && body.photos.length ? `<p style="color:#777">Pridėta nuotraukų: ${body.photos.length} (žr. priedus)</p>` : ""}
@@ -135,8 +139,8 @@ export const onRequestPost = async (context: {
   const customerHtml = `
     <div style="font-family:system-ui,sans-serif;max-width:560px">
       <h2>Ačiū, ${safe(name)}!</h2>
-      <p>Gavome jūsų taisymo užklausą. Per vieną darbo dieną atsiųsime patvirtinimą su galutine kaina ir siuntimo instrukcijomis.</p>
-      <p style="font-family:monospace">Preliminari kaina: nuo ${est.totalFrom ?? 0} € · Terminas: ${turn}</p>
+      <p>Gavome jūsų taisymo užklausą. Per vieną darbo dieną atsiųsime patvirtinimą su siuntimo ir apmokėjimo instrukcijomis.</p>
+      <p style="font-family:monospace">Kaina: ${total} € · Terminas: ${turn}</p>
       <p style="color:#555">Jei turite klausimų, tiesiog atsakykite į šį laišką.</p>
       <p>— Rethread</p>
     </div>`;
@@ -148,7 +152,7 @@ export const onRequestPost = async (context: {
   }
 
   const from = env.ORDER_FROM_EMAIL || "Rethread <uzsakymai@rethread.lt>";
-  const to = env.ORDER_TO_EMAIL || "labas@rethread.lt";
+  const to = env.ORDER_TO_EMAIL || "business@rethread.lt";
 
   const send = (payload: Record<string, unknown>): Promise<Response> =>
     fetch("https://api.resend.com/emails", {

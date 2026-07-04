@@ -3,7 +3,7 @@
    persists to sessionStorage, so the chosen repairs prefill the order form.
    ========================================================================== */
 
-import type { GarmentId, RepairId } from "../content/pricing";
+import { GARMENTS, REPAIRS, type GarmentId, type RepairId } from "../content/pricing";
 
 export interface Spot {
   x: number; // 0..1 normalized within the garment box
@@ -19,13 +19,24 @@ export interface EstimateState {
 
 const KEY = "rethread.estimate.v1";
 type Listener = (state: EstimateState) => void;
+const garmentIds = new Set<string>(GARMENTS.map((g) => g.id));
+const repairIds = new Set<string>(REPAIRS.map((r) => r.id));
 
 function load(): EstimateState {
   try {
     const raw = sessionStorage.getItem(KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as EstimateState;
-      if (parsed && Array.isArray(parsed.repairs)) return { ...parsed, spots: parsed.spots ?? {} };
+      if (parsed && Array.isArray(parsed.repairs)) {
+        const garment = parsed.garment && garmentIds.has(parsed.garment) ? parsed.garment : null;
+        const repairs = parsed.repairs.filter((repair) => repairIds.has(repair));
+        const spots: Partial<Record<RepairId, Spot>> = {};
+        for (const repair of repairs) {
+          const spot = parsed.spots?.[repair];
+          if (spot && Number.isFinite(spot.x) && Number.isFinite(spot.y)) spots[repair] = spot;
+        }
+        return { garment, repairs, spots };
+      }
     }
   } catch {
     /* ignore */
