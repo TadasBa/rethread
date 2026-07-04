@@ -1,0 +1,83 @@
+/* ============================================================================
+   Rethread — design tokens
+   Direction: boro / sashiko. Panels of raw cloth and deep indigo, sewn together
+   by a running stitch. One accent (ochre). Numbers live in a monospace
+   "tailor's spec-sheet" voice. No gradients, no glass.
+   ========================================================================== */
+
+:root {
+  /* --- Cloth & ink -------------------------------------------------------- */
+  --raw: #e9e3d5;         /* raw cotton canvas (default light surface) */
+  --raw-2: #ded6c4;       /* deeper cloth (cards, insets) */
+  --raw-3: #d3cab5;       /* deepest cloth (hairlines on light) */
+  --indigo: #22314f;      /* boro indigo (primary dark surface / hero) */
+  --indigo-800: #182338;  /* deep indigo */
+  --indigo-900: #101827;  /* near-black indigo (footer) */
+  --ink: #1c1b18;         /* text on cloth */
+  --ink-soft: #514c40;    /* secondary text on cloth */
+  --thread: #f2ecdd;      /* sashiko thread + text on indigo */
+  --thread-soft: #b9c0cf; /* secondary text on indigo */
+
+  /* --- Accent (spend boldness here, sparingly) --------------------------- */
+  --ochre: #d3a24a;       /* active thread, markers, focus (accent on dark/large) */
+  --ochre-deep: #745218;  /* ochre for TEXT/icons on light — AA (5.5:1 on raw) */
+  --tack: #c0432f;        /* rare tailor's-tack red — errors / critical only */
+  --sage: #7f8a6d;        /* quiet support tone (guarantee, success) */
+
+  /* --- Semantic surfaces ------------------------------------------------- */
+  --bg: var(--raw);
+  --fg: var(--ink);
+  --hairline: color-mix(in oklab, var(--ink) 16%, transparent);
+  --hairline-strong: color-mix(in oklab, var(--ink) 32%, transparent);
+  --focus: var(--ochre);
+
+  /* --- Type -------------------------------------------------------------- */
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+  --font-mono: "Spline Sans Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Fluid type scale (clamp: min .. max across 360–1440px) */
+  --step--1: clamp(0.78rem, 0.75rem + 0.12vw, 0.86rem);
+  --step-0: clamp(0.96rem, 0.92rem + 0.2vw, 1.08rem);
+  --step-1: clamp(1.15rem, 1.06rem + 0.42vw, 1.45rem);
+  --step-2: clamp(1.42rem, 1.25rem + 0.82vw, 2.1rem);
+  --step-3: clamp(1.8rem, 1.45rem + 1.6vw, 3.1rem);
+  --step-4: clamp(2.3rem, 1.7rem + 2.9vw, 4.6rem);
+  --step-5: clamp(2.9rem, 1.9rem + 4.9vw, 6.8rem);
+
+  /* --- Space (based on an 8px stitch grid) ------------------------------- */
+  --sp-1: 0.5rem;
+  --sp-2: 1rem;
+  --sp-3: 1.5rem;
+  --sp-4: 2rem;
+  --sp-5: 3rem;
+  --sp-6: 4.5rem;
+  --sp-7: 7rem;
+  --sp-8: 10rem;
+
+  /* --- Structure --------------------------------------------------------- */
+  --measure: 62ch;
+  --shell: min(92vw, 1200px);
+  --shell-narrow: min(92vw, 760px);
+  --radius: 3px;         /* barely-there; cloth is not rounded */
+  --stitch: 9px 7px;     /* dash / gap of the running stitch */
+
+  /* --- Motion ------------------------------------------------------------ */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-1: 0.18s;
+  --dur-2: 0.4s;
+  --dur-3: 0.7s;
+
+  --nav-h: 68px;
+  color-scheme: light;
+}
+
+/* Reduced motion: collapse all durations, keep state changes instant. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-1: 0.001s;
+    --dur-2: 0.001s;
+    --dur-3: 0.001s;
+  }
+}
