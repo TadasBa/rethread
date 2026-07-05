@@ -38,8 +38,6 @@ Cloudflare Pages builds `dist` with `npm run build`.
 - `main` branch deploys to <https://rethread.lt>
 - Pull requests and feature branches run checks only
 
-Recommended flow: feature branch -> `dev` -> `main`.
-
 GitHub Actions requires these repository secrets:
 
 ```env
@@ -54,5 +52,3 @@ RESEND_API_KEY
 ORDER_TO_EMAIL
 ORDER_FROM_EMAIL
 ```
-
-Keep secrets and real API values outside the repository.
