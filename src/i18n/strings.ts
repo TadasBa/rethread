@@ -265,7 +265,7 @@ const lt = {
   about: {
     title: "Apie mus",
     lead: "Rethread — komanda, tikinti, kad drabužio istorija neturi baigtis dėl vieno sutrūkusio siūlo.",
-    body1: "Pradėjome nuo paprasto pastebėjimo: dažną mėgstamą drabužį išmetame ne todėl, kad jis nusidėvėjo, o todėl, kad pataisyti atrodo per sudėtinga. Nėra kur nunešti, nežinia kiek kainuos, gaila laiko.",
+    body1: "Rethread idėja gimė pastebėjus, kad dažnai mėgstamą drabužį išmetame ne todėl, kad jis nusidėvėjo, o todėl, kad pataisyti atrodo per sudėtinga. Nėra kur nunešti, nežinia kiek kainuos, gaila laiko.",
     body2: "Todėl taisymą padarėme tokį paprastą, koks jis turėtų būti: pasirenkate taisymus internetu, išsiunčiate paštomatu, atgaunate drabužį kaip naują. Aiškiai, greitai ir su pagarba tiek daiktui, tiek jūsų laikui.",
     body3: "Dirbame su patyrusiais siuvėjais ir renkamės kokybiškas medžiagas, nes tikime, kad gerai padarytas taisymas tarnauja metų metus. Tvarumas mums prasideda ne nuo šūkių, o nuo konkretaus dygsnio.",
     valuesTitle: "Kuo tikime",
