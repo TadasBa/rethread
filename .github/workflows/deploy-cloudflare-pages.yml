@@ -3,6 +3,7 @@ name: Deploy to Cloudflare Pages
 on:
   push:
     branches:
+      - dev
       - main
   workflow_dispatch:
 
@@ -11,7 +12,7 @@ permissions:
   deployments: write
 
 concurrency:
-  group: cloudflare-pages-production
+  group: cloudflare-pages-${{ github.ref_name }}
   cancel-in-progress: true
 
 env:
@@ -19,7 +20,8 @@ env:
 
 jobs:
   deploy:
-    name: Build and deploy
+    name: Build and deploy ${{ github.ref_name }}
+    if: github.ref_name == 'dev' || github.ref_name == 'main'
     runs-on: ubuntu-latest
 
     steps:
@@ -43,5 +45,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=${{ env.CLOUDFLARE_PROJECT_NAME }} --branch=main
+          command: pages deploy dist --project-name=${{ env.CLOUDFLARE_PROJECT_NAME }} --branch=${{ github.ref_name }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

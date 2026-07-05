@@ -2,13 +2,16 @@
 
 Custom website for **Rethread**, a Lithuanian mail-in clothing repair service.
 
+- Production: <https://rethread.lt>
+- Development: <https://dev.rethread.lt>
+
 ## Stack
 
 - Vite + TypeScript SPA
 - Hand-written DOM helpers and router
 - CSS variables with scoped component styles
 - Cloudflare Pages + Pages Functions
-- Resend-ready order email endpoint
+- Resend order email endpoint
 
 ## Commands
 
@@ -29,32 +32,27 @@ npm run pages:dev
 
 ## Deployment
 
-Cloudflare Pages:
+Cloudflare Pages builds `dist` with `npm run build`.
 
-```txt
-Build command: npm run build
-Output directory: dist
-Project name: rethread
-```
+- `dev` branch deploys to <https://dev.rethread.lt>
+- `main` branch deploys to <https://rethread.lt>
+- Pull requests and feature branches run checks only
 
-GitHub Actions:
+Recommended flow: feature branch -> `dev` -> `main`.
 
-- `CI` checks pull requests and non-main branches.
-- `Deploy to Cloudflare Pages` checks and deploys `main`.
+GitHub Actions requires these repository secrets:
 
-Required GitHub secrets:
-
-```txt
+```env
 CLOUDFLARE_ACCOUNT_ID
 CLOUDFLARE_API_TOKEN
 ```
 
-Set email variables in Cloudflare Pages when email is enabled:
+Cloudflare Pages environment variables:
 
-```txt
+```env
 RESEND_API_KEY
-ORDER_TO_EMAIL=business@rethread.lt
-ORDER_FROM_EMAIL=Rethread <uzsakymai@rethread.lt>
+ORDER_TO_EMAIL
+ORDER_FROM_EMAIL
 ```
 
-Without `RESEND_API_KEY`, `/api/order` logs locally and returns `ok` for testing.
+Keep secrets and real API values outside the repository.
