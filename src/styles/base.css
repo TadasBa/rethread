@@ -141,10 +141,14 @@ p {
 }
 
 /* --- Accessibility ------------------------------------------------------- */
-:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+:where(a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])):focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+[tabindex="-1"]:focus {
+  outline: none;
 }
 
 .skip-link {

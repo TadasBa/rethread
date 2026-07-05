@@ -10,7 +10,7 @@
   max-width: 54ch;
   margin-bottom: var(--sp-5);
 }
-.pagehead__title:focus-visible {
+.pagehead__title:focus-visible:not([tabindex="-1"]) {
   outline: 3px solid var(--focus);
   outline-offset: 6px;
 }
