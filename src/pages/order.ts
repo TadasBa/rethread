@@ -38,6 +38,7 @@ declare global {
       ready: (callback: () => void) => void;
       render: (container: HTMLElement | string, options: Record<string, unknown>) => string;
       reset: (widgetId?: string) => void;
+      getResponse?: (widgetId?: string) => string | undefined;
     };
   }
 }
@@ -262,9 +263,32 @@ export function renderOrder(): HTMLElement {
   let turnstileWidgetId: string | null = null;
   const turnstileBox = h("div.turnstile-box");
   const turnstileErr = h("span.field__error", { "aria-live": "polite" });
+  const turnstileWaiters: Array<{
+    resolve: (token: string) => void;
+    reject: (error: Error) => void;
+    timeout: number;
+  }> = [];
+
+  const resolveTurnstileWaiters = (token: string): void => {
+    for (const waiter of turnstileWaiters.splice(0)) {
+      window.clearTimeout(waiter.timeout);
+      waiter.resolve(token);
+    }
+  };
+
+  const rejectTurnstileWaiters = (error: Error): void => {
+    for (const waiter of turnstileWaiters.splice(0)) {
+      window.clearTimeout(waiter.timeout);
+      waiter.reject(error);
+    }
+  };
 
   const mountTurnstile = (): void => {
-    if (!TURNSTILE_SITE_KEY || turnstileWidgetId || !turnstileBox.isConnected) return;
+    if (!TURNSTILE_SITE_KEY || turnstileWidgetId) return;
+    if (!turnstileBox.isConnected) {
+      requestAnimationFrame(mountTurnstile);
+      return;
+    }
     loadTurnstile()
       .then(() => {
         window.turnstile?.ready(() => {
@@ -275,19 +299,46 @@ export function renderOrder(): HTMLElement {
             callback: (token: string) => {
               turnstileToken = token;
               turnstileErr.textContent = "";
+              resolveTurnstileWaiters(token);
             },
             "expired-callback": () => {
               turnstileToken = "";
             },
             "error-callback": () => {
               turnstileToken = "";
+              rejectTurnstileWaiters(new Error("turnstile_error"));
             },
           });
         });
       })
       .catch(() => {
-        turnstileErr.textContent = S.order.validation.verification;
+        rejectTurnstileWaiters(new Error("turnstile_load_failed"));
       });
+  };
+
+  const waitForTurnstileToken = (): Promise<string> => {
+    if (!TURNSTILE_SITE_KEY) return Promise.resolve("");
+
+    const response = turnstileWidgetId ? window.turnstile?.getResponse?.(turnstileWidgetId) : "";
+    const existingToken = response || turnstileToken;
+    if (existingToken) return Promise.resolve(existingToken);
+
+    mountTurnstile();
+
+    return new Promise((resolve, reject) => {
+      const waiter = {
+        resolve,
+        reject,
+        timeout: window.setTimeout(() => {
+          const i = turnstileWaiters.indexOf(waiter);
+          if (i >= 0) turnstileWaiters.splice(i, 1);
+          const latest = turnstileWidgetId ? window.turnstile?.getResponse?.(turnstileWidgetId) : "";
+          if (latest || turnstileToken) resolve(latest || turnstileToken);
+          else reject(new Error("turnstile_timeout"));
+        }, 8000),
+      };
+      turnstileWaiters.push(waiter);
+    });
   };
 
   const submitBtn = h("button.btn.btn--accent.orderform__submit", { type: "submit" }, S.order.submit) as HTMLButtonElement;
@@ -317,10 +368,6 @@ export function renderOrder(): HTMLElement {
         consentErr.textContent = "";
         if (!consent.checked) { consentErr.textContent = S.order.validation.consent; ok = false; }
         turnstileErr.textContent = "";
-        if (TURNSTILE_SITE_KEY && !turnstileToken) {
-          turnstileErr.textContent = S.order.validation.verification;
-          ok = false;
-        }
         if (!ok) {
           form.querySelector<HTMLElement>(".is-invalid")?.focus();
           return;
@@ -330,6 +377,16 @@ export function renderOrder(): HTMLElement {
         submitBtn.disabled = true;
         formStatus.classList.remove("is-error");
         formStatus.textContent = S.order.submitting;
+
+        let verifiedToken = "";
+        try {
+          verifiedToken = await waitForTurnstileToken();
+        } catch {
+          submitBtn.disabled = false;
+          formStatus.textContent = `${S.order.errorTitle} ${S.order.errorBody}`;
+          formStatus.classList.add("is-error");
+          return;
+        }
 
         const repairDetails: Partial<Record<RepairId, string>> = {};
         const repairLocations: Partial<Record<RepairId, string>> = {};
@@ -352,7 +409,7 @@ export function renderOrder(): HTMLElement {
           repairDetails,
           repairLocations,
           photos: photos.map((p) => ({ name: p.name, type: p.type, base64: p.base64 })),
-          turnstileToken,
+          turnstileToken: verifiedToken,
         };
 
         try {
