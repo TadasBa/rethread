@@ -18,6 +18,7 @@ Custom website for **Rethread**, a Lithuanian mail-in clothing repair service.
 ```bash
 npm install
 npm run dev
+npm test
 npm run check
 npm run pages:dev
 ```
@@ -25,7 +26,7 @@ npm run pages:dev
 ## Content
 
 - Main copy: `src/i18n/strings.ts`
-- Fixed service prices: `src/content/pricing.ts`
+- Fixed service prices: `shared/pricing-data.json`
 - Legal/shipping pages: `src/pages/legal.ts`
 - Journal posts: `src/content/journal/*.md`
 - Order Function: `functions/api/order.ts`
@@ -43,6 +44,7 @@ GitHub Actions requires these repository secrets:
 ```env
 CLOUDFLARE_ACCOUNT_ID
 CLOUDFLARE_API_TOKEN
+VITE_TURNSTILE_SITE_KEY
 ```
 
 Cloudflare Pages environment variables:
@@ -51,4 +53,5 @@ Cloudflare Pages environment variables:
 RESEND_API_KEY
 ORDER_TO_EMAIL
 ORDER_FROM_EMAIL
+TURNSTILE_SECRET_KEY
 ```
