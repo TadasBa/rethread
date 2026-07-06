@@ -7,6 +7,8 @@ pages_build_output_dir = "dist"
 #   RESEND_API_KEY    — API key from resend.com
 #   ORDER_TO_EMAIL    — inbox that receives order requests
 #   ORDER_FROM_EMAIL  — from-address on a domain verified in Resend
+#   TURNSTILE_SECRET_KEY      — server-side Cloudflare Turnstile secret
+#   VITE_TURNSTILE_SITE_KEY  — public Turnstile site key used by the browser
 #
 # Local dev:  npm run build && npm run pages:dev
-# (without RESEND_API_KEY the /api/order function logs and returns ok)
+# (without RESEND_API_KEY the /api/order function logs a safe stub and returns ok)
