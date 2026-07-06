@@ -30,6 +30,43 @@ interface Photo {
 const MAX_PHOTOS = 5;
 const MAX_BYTES = 4 * 1024 * 1024;
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
+
+declare global {
+  interface Window {
+    turnstile?: {
+      ready: (callback: () => void) => void;
+      render: (container: HTMLElement | string, options: Record<string, unknown>) => string;
+      reset: (widgetId?: string) => void;
+    };
+  }
+}
+
+let turnstileScript: Promise<void> | null = null;
+
+function loadTurnstile(): Promise<void> {
+  if (window.turnstile) return Promise.resolve();
+  if (turnstileScript) return turnstileScript;
+
+  turnstileScript = new Promise((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>("script[data-turnstile]");
+    if (existing) {
+      existing.addEventListener("load", () => resolve(), { once: true });
+      existing.addEventListener("error", () => reject(new Error("turnstile_load_failed")), { once: true });
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    script.defer = true;
+    script.dataset.turnstile = "true";
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("turnstile_load_failed"));
+    document.head.appendChild(script);
+  });
+
+  return turnstileScript;
+}
 
 function describeSpot(s: Spot): string {
   const vert = s.y < 0.4 ? "viršus" : s.y > 0.66 ? "apačia" : "vidurys";
@@ -221,6 +258,38 @@ export function renderOrder(): HTMLElement {
     type: "text", name: "company", tabindex: "-1", autocomplete: "off", "aria-hidden": "true",
   }) as HTMLInputElement;
 
+  let turnstileToken = "";
+  let turnstileWidgetId: string | null = null;
+  const turnstileBox = h("div.turnstile-box");
+  const turnstileErr = h("span.field__error", { "aria-live": "polite" });
+
+  const mountTurnstile = (): void => {
+    if (!TURNSTILE_SITE_KEY || turnstileWidgetId || !turnstileBox.isConnected) return;
+    loadTurnstile()
+      .then(() => {
+        window.turnstile?.ready(() => {
+          if (!window.turnstile || turnstileWidgetId || !turnstileBox.isConnected) return;
+          turnstileWidgetId = window.turnstile.render(turnstileBox, {
+            sitekey: TURNSTILE_SITE_KEY,
+            theme: "light",
+            callback: (token: string) => {
+              turnstileToken = token;
+              turnstileErr.textContent = "";
+            },
+            "expired-callback": () => {
+              turnstileToken = "";
+            },
+            "error-callback": () => {
+              turnstileToken = "";
+            },
+          });
+        });
+      })
+      .catch(() => {
+        turnstileErr.textContent = S.order.validation.verification;
+      });
+  };
+
   const submitBtn = h("button.btn.btn--accent.orderform__submit", { type: "submit" }, S.order.submit) as HTMLButtonElement;
   const formStatus = h("p.orderform__status", { role: "status", "aria-live": "polite" });
 
@@ -247,14 +316,27 @@ export function renderOrder(): HTMLElement {
         if (!emailRe.test(email.input.value.trim())) setErr(email, S.order.validation.email);
         consentErr.textContent = "";
         if (!consent.checked) { consentErr.textContent = S.order.validation.consent; ok = false; }
+        turnstileErr.textContent = "";
+        if (TURNSTILE_SITE_KEY && !turnstileToken) {
+          turnstileErr.textContent = S.order.validation.verification;
+          ok = false;
+        }
         if (!ok) {
           form.querySelector<HTMLElement>(".is-invalid")?.focus();
           return;
         }
+        if (!garment || repairs.length === 0) return;
 
         submitBtn.disabled = true;
         formStatus.classList.remove("is-error");
         formStatus.textContent = S.order.submitting;
+
+        const repairDetails: Partial<Record<RepairId, string>> = {};
+        const repairLocations: Partial<Record<RepairId, string>> = {};
+        for (const rid of repairs) {
+          repairDetails[rid] = detailInputs.get(rid)?.value.trim() || "";
+          if (spots[rid]) repairLocations[rid] = describeSpot(spots[rid] as Spot);
+        }
 
         const payload = {
           name: name.input.value.trim(),
@@ -262,23 +344,15 @@ export function renderOrder(): HTMLElement {
           phone: phone.input.value.trim(),
           shipping: shipping.value,
           notes: notes.value.trim(),
+          consent: consent.checked,
           company: honeypot.value,
           garmentInfo: { type: gType.input.value.trim(), color: gColor.input.value.trim() },
-          estimate: {
-            garment: garment ? garmentById(garment).label : null,
-            garmentId: garment,
-            repairs: garment
-              ? repairs.map((rid) => ({
-                  label: repairById(rid).label,
-                  price: priceOf(rid, garment),
-                  detail: detailInputs.get(rid)?.value.trim() || "",
-                  location: spots[rid] ? describeSpot(spots[rid] as Spot) : null,
-                }))
-              : [],
-            totalPrice: garment ? totalPrice(garment, repairs) : 0,
-            turnaround: turnaroundFor(repairs),
-          },
+          garmentId: garment,
+          repairIds: repairs,
+          repairDetails,
+          repairLocations,
           photos: photos.map((p) => ({ name: p.name, type: p.type, base64: p.base64 })),
+          turnstileToken,
         };
 
         try {
@@ -294,6 +368,10 @@ export function renderOrder(): HTMLElement {
           submitBtn.disabled = false;
           formStatus.textContent = `${S.order.errorTitle} ${S.order.errorBody}`;
           formStatus.classList.add("is-error");
+          if (turnstileWidgetId) {
+            window.turnstile?.reset(turnstileWidgetId);
+            turnstileToken = "";
+          }
         }
       },
     },
@@ -312,6 +390,9 @@ export function renderOrder(): HTMLElement {
       : null,
     fieldset(S.order.photosTitle, photoField),
     fieldset(S.order.shippingTitle, shippingWrap, notesWrap),
+    TURNSTILE_SITE_KEY
+      ? h("div.formsec", {}, turnstileBox, turnstileErr)
+      : null,
     consentWrap,
     honeypot,
     h("div.orderform__foot", {}, submitBtn, formStatus),
@@ -343,6 +424,8 @@ export function renderOrder(): HTMLElement {
       ),
     ),
   );
+
+  if (hasSelection && TURNSTILE_SITE_KEY) requestAnimationFrame(mountTurnstile);
 
   return root;
 }

@@ -18,5 +18,5 @@
     "noUncheckedSideEffectImports": true,
     "types": ["vite/client"]
   },
-  "include": ["src", "functions", "vite.config.ts"]
+  "include": ["src", "functions", "shared", "vite.config.ts"]
 }
