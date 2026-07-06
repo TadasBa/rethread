@@ -1,0 +1,122 @@
+{
+  "site": {
+    "name": "Rethread",
+    "origin": "https://rethread.lt",
+    "language": "lt",
+    "hreflang": "lt-LT",
+    "locale": "lt_LT",
+    "themeColor": "#22314f",
+    "image": "/og.svg",
+    "imageAlt": "Rethread - drabužių taisymas paštu visoje Lietuvoje",
+    "email": "business@rethread.lt",
+    "phone": "+37062634234"
+  },
+  "pages": {
+    "/": {
+      "title": "drabužių taisymas paštu visoje Lietuvoje",
+      "description": "Atsiųskite drabužius paštomatu — sutvarkysime ir grąžinsime. Aiškios kainos, 3–7 darbo dienos ir 14 dienų taisymo garantija.",
+      "changefreq": "weekly",
+      "priority": "1.0",
+      "schema": ["organization", "website", "service"]
+    },
+    "/taisymas": {
+      "title": "Taisymo skaičiuoklė",
+      "description": "Pasirinkite drabužį ir taisymus internetu. Rethread skaičiuoklėje kainą ir 3-7 darbo dienų terminą matysite iškart.",
+      "changefreq": "weekly",
+      "priority": "0.9",
+      "schema": ["service", "breadcrumb"]
+    },
+    "/kaip-tai-veikia": {
+      "title": "Kaip veikia drabužių taisymas paštu",
+      "description": "Pasirinkite taisymus internetu, pateikite užklausą, gaukite patvirtinimą su siuntimo ir apmokėjimo instrukcijomis, o drabužį atsiųskite paštomatu arba kurjeriu.",
+      "changefreq": "monthly",
+      "priority": "0.8",
+      "schema": ["breadcrumb"]
+    },
+    "/zurnalas": {
+      "title": "Žurnalas apie drabužių taisymą",
+      "description": "Trumpi Rethread straipsniai apie drabužių taisymą, priežiūrą, ilgesnį drabužių gyvenimą ir tvaresnius įpročius.",
+      "changefreq": "weekly",
+      "priority": "0.7",
+      "schema": ["breadcrumb"]
+    },
+    "/duk": {
+      "title": "Dažni klausimai",
+      "description": "Atsakymai apie Rethread kainas, siuntimą, taisymo terminus, garantiją ir apmokėjimą.",
+      "changefreq": "monthly",
+      "priority": "0.7",
+      "schema": ["faq", "breadcrumb"]
+    },
+    "/apie": {
+      "title": "Apie Rethread",
+      "description": "Rethread - drabužių taisymo paštu paslauga žmonėms, kurie nori pataisyti daiktą aiškiai, patogiai ir be spėlionių.",
+      "changefreq": "monthly",
+      "priority": "0.6",
+      "schema": ["organization", "breadcrumb"]
+    },
+    "/kontaktai": {
+      "title": "Kontaktai",
+      "description": "Susisiekite su Rethread dėl drabužių taisymo: business@rethread.lt arba +370 62634234.",
+      "changefreq": "monthly",
+      "priority": "0.6",
+      "schema": ["organization", "breadcrumb"]
+    },
+    "/pristatymas-ir-grazinimas": {
+      "title": "Siuntimas ir grąžinimas",
+      "description": "Kaip išsiųsti drabužį Rethread taisymui ir kaip sutaisytas drabužis grąžinamas jums.",
+      "changefreq": "monthly",
+      "priority": "0.5",
+      "schema": ["breadcrumb"]
+    },
+    "/garantija": {
+      "title": "14 dienų taisymo garantija",
+      "description": "Rethread suteikia 14 dienų taisymo garantiją atliktam darbui. Sužinokite, kada taikomas pakartotinis taisymas ir kokios išimtys galioja.",
+      "changefreq": "monthly",
+      "priority": "0.5",
+      "schema": ["breadcrumb"]
+    },
+    "/privatumo-politika": {
+      "title": "Privatumo politika",
+      "description": "Kaip Rethread tvarko svetainėje ir užsakymo formoje pateiktus asmens duomenis.",
+      "changefreq": "yearly",
+      "priority": "0.3",
+      "schema": ["breadcrumb"]
+    },
+    "/taisykles": {
+      "title": "Paslaugų teikimo sąlygos",
+      "description": "Rethread drabužių taisymo paslaugų teikimo, siuntimo, apmokėjimo ir garantijos sąlygos.",
+      "changefreq": "yearly",
+      "priority": "0.3",
+      "schema": ["breadcrumb"]
+    },
+    "/uzsakymas": {
+      "title": "Užsakymo užklausa",
+      "description": "Pateikite Rethread drabužių taisymo užklausą ir gaukite patvirtinimą su siuntimo bei apmokėjimo instrukcijomis.",
+      "changefreq": "monthly",
+      "priority": "0.8",
+      "schema": ["breadcrumb"]
+    }
+  },
+  "faq": [
+    {
+      "q": "Kiek kainuoja taisymas?",
+      "a": "Kaina priklauso nuo drabužio ir darbo. Skaičiuoklėje matote tikslią pasirinktos paslaugos kainą iškart."
+    },
+    {
+      "q": "Kaip pristatyti drabužį?",
+      "a": "Paštomatu arba kurjeriu. Kai pateiksite užklausą, atsiųsime tikslų adresą ir instrukcijas el. paštu."
+    },
+    {
+      "q": "Kiek užtrunka?",
+      "a": "Įprastai 3-7 darbo dienas nuo drabužio gavimo. Skubiems atvejams galimas greitesnis terminas pagal susitarimą."
+    },
+    {
+      "q": "O jei drabužio pataisyti nepavyks?",
+      "a": "Prieš imdamiesi darbo visada patvirtiname galimybes. Jei taisymas neįmanomas, grąžiname drabužį be jokio mokesčio už darbą."
+    },
+    {
+      "q": "Ar galioja garantija?",
+      "a": "Taip - 14 dienų. Jei kažkas ne taip, pataisysime iš naujo arba grąžinsime pinigus."
+    }
+  ]
+}

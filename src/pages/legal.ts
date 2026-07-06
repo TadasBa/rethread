@@ -2,7 +2,7 @@ import { h } from "../lib/dom";
 import type { RouteContext } from "../router";
 import { pageHead } from "./_helpers";
 
-type LegalKind = "privacy" | "terms" | "shipping";
+type LegalKind = "privacy" | "terms" | "shipping" | "guarantee";
 type LegalSection = {
   title?: string;
   paragraphs?: string[];
@@ -32,7 +32,7 @@ const CONTENT: Record<LegalKind, { title: string; lead: string; sections: LegalS
         title: "Renkama asmeninė informacija",
         paragraphs: [
           "Apsilankę ReThread svetainėje, automatiškai renkame tam tikrą informaciją apie jūsų įrenginį: naršyklę, IP adresą, laiko juostą ir kai kuriuos slapukus. Taip pat galime rinkti informaciją apie peržiūrėtus puslapius ar produktus, nukreipusias svetaines ar paieškos terminus ir sąveiką su svetaine.",
-          "Galime rinkti registracijos ar formų metu pateiktus asmens duomenis, įskaitant vardą, pavardę, adresą, mokėjimo informaciją ir kitus duomenis, reikalingus sutarčiai vykdyti. Informacija saugoma tik tiek laiko, kiek būtina sklandžiam svetainės veikimui ir sutarties įsipareigojimams įvykdyti.",
+          "Galime rinkti formų metu pateiktus asmens duomenis, įskaitant vardą, pavardę, el. paštą, telefono numerį, siuntimo informaciją ir kitus duomenis, reikalingus užklausai ar paslaugai vykdyti. Informacija saugoma tik tiek laiko, kiek būtina sklandžiam svetainės veikimui ir įsipareigojimams įvykdyti.",
         ],
       },
       {
@@ -135,8 +135,8 @@ const CONTENT: Record<LegalKind, { title: string; lead: string; sections: LegalS
       {
         title: "3. Užsakymo pateikimas ir sutarties sudarymas",
         paragraphs: [
-          "Paslaugų pirkimo-pardavimo sutartis laikoma sudaryta nuo momento, kai Klientas Svetainėje pateikia užsakymą, įvykdo apmokėjimą ir gauna patvirtinimą elektroniniu laišku.",
-          "Klientas privalo pateikti teisingus kontaktinius duomenis, adresą, drabužių aprašymą ir pageidaujamą paslaugą ar kitą būtiną informaciją.",
+          "Svetainėje pateikta forma yra užklausa dėl drabužių taisymo. Paslaugų teikimas pradedamas tik tada, kai Rethread patvirtina užklausą, Klientas gauna siuntimo ir apmokėjimo instrukcijas ir šalys susitaria dėl tolimesnio vykdymo.",
+          "Klientas privalo pateikti teisingus kontaktinius duomenis, drabužių aprašymą ir pageidaujamą paslaugą ar kitą būtiną informaciją.",
           "Rethread neatsako už klaidas ar nuostolius, atsiradusius dėl neteisingos ar neišsamios informacijos pateikimo.",
         ],
         items: [
@@ -147,10 +147,10 @@ const CONTENT: Record<LegalKind, { title: string; lead: string; sections: LegalS
       {
         title: "4. Kainos ir atsiskaitymas",
         paragraphs: [
-          "Paslaugų kainos nurodytos Svetainėje arba nustatomos individualiai po drabužių įvertinimo.",
-          "Visos kainos pateikiamos eurais (EUR) su PVM.",
-          "Apmokėjimas už paslaugas atliekamas elektroniniu būdu per Svetainę, bankiniu pavedimu ar kitais nurodytais būdais.",
-          "Paslaugų teikimas pradedamas tik po apmokėjimo patvirtinimo, išskyrus atvejus, kai sutarta kitaip.",
+          "Svetainėje nurodytos pasirinktos paslaugos kainos yra galutinės, jei nenurodyta kitaip.",
+          "Kainos pateikiamos eurais (EUR). Jei reikėtų papildomo, užklausoje nepasirinkto darbo, Rethread pirmiausia susisiekia su Klientu.",
+          "Apmokėjimo nuoroda ar kitos apmokėjimo instrukcijos siunčiamos po užklausos patvirtinimo.",
+          "Paslaugų teikimas pradedamas tik po užklausos ir apmokėjimo patvirtinimo, išskyrus atvejus, kai sutarta kitaip.",
         ],
       },
       {
@@ -297,7 +297,7 @@ const CONTENT: Record<LegalKind, { title: string; lead: string; sections: LegalS
         title: "2. Grąžinimo procesas",
         items: [
           "susisiekite su mumis el. paštu arba per svetainės kontaktų formą, nurodydami užsakymo numerį ir problemos aprašymą;",
-          "gavus patvirtinimą, galėsite nemokamai išsiųsti drabužį atgal per mūsų pasirinktą siuntimo partnerį.",
+          "gavus patvirtinimą, atsiųsime tolimesnes pakartotinio taisymo ar grąžinimo instrukcijas.",
         ],
       },
       {
@@ -311,9 +311,44 @@ const CONTENT: Record<LegalKind, { title: string; lead: string; sections: LegalS
         title: "Papildoma informacija",
         items: [
           "siuntimo išlaidos į dirbtuves yra kliento atsakomybė, nebent taikoma speciali akcija;",
-          "grąžinimo ar pakartotinio taisymo siuntimo išlaidas padengiame mes;",
+          "pakartotinio taisymo ar grąžinimo siuntimo sąlygos patvirtinamos individualiai pagal situaciją;",
           "visos siuntos yra sekamos - užtikriname saugų drabužių pristatymą;",
           "išsamią informaciją apie pristatymą, grąžinimą ir paslaugų teikimą rasite skiltyje „Paslaugų teikimo sąlygos“.",
+        ],
+      },
+    ],
+  },
+  guarantee: {
+    title: "14 dienų taisymo garantija",
+    lead: "Ką darome, jei taisymas neatitiko sutarto rezultato.",
+    sections: [
+      {
+        paragraphs: [
+          "Rethread suteikia 14 dienų garantiją atliktam taisymo darbui nuo drabužio gavimo dienos.",
+          "Jei pastebite, kad taisymas neatitiko patvirtintos užklausos arba defektas pasikartojo dėl mūsų atlikto darbo, susisiekite el. paštu business@rethread.lt ir pridėkite nuotrauką.",
+        ],
+      },
+      {
+        title: "Kada taikoma garantija",
+        items: [
+          "kai taisymo vieta neatitinka patvirtintos užklausos;",
+          "kai per 14 dienų išryškėja mūsų atlikto taisymo defektas;",
+          "kai drabužis buvo prižiūrimas pagal įprastas audinio priežiūros rekomendacijas.",
+        ],
+      },
+      {
+        title: "Kada garantija netaikoma",
+        items: [
+          "jei drabužis po taisymo buvo pažeistas dėl netinkamo dėvėjimo, skalbimo ar džiovinimo;",
+          "jei atsirado naujas defektas kitoje drabužio vietoje;",
+          "jei audinys buvo per daug susidėvėjęs, suplonėjęs ar pažeistas ir apie riziką buvote informuoti prieš taisymą;",
+          "jei praėjo daugiau nei 14 dienų nuo drabužio gavimo.",
+        ],
+      },
+      {
+        title: "Sprendimas",
+        paragraphs: [
+          "Įvertinę situaciją pasiūlysime nemokamą pakartotinį taisymą arba kitą sąžiningą sprendimą. Jei taisymas negali būti atliktas saugiai ar tvarkingai, apie tai informuosime prieš tęsdami darbą.",
         ],
       },
     ],

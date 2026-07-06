@@ -3,35 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- SEO:start -->
     <meta name="theme-color" content="#22314f" />
     <meta name="color-scheme" content="light" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="application-name" content="Rethread" />
-    <title>Rethread — drabužių taisymas paštu</title>
+    <meta name="apple-mobile-web-app-title" content="Rethread" />
+    <meta name="author" content="Rethread" />
+    <meta name="geo.region" content="LT" />
+    <meta name="geo.placename" content="Lithuania" />
+    <title>Rethread — drabužių taisymas paštu visoje Lietuvoje</title>
     <meta
       name="description"
-      content="Rethread — drabužių taisymas paštu visoje Lietuvoje. Pasirinkite taisymus, sužinokite kainą iškart, atsiųskite paštomatu ir atgaukite drabužį kaip naują."
+      content="Atsiųskite drabužius paštomatu — sutvarkysime ir grąžinsime. Aiškios kainos, 3–7 darbo dienos ir 14 dienų taisymo garantija."
     />
     <link rel="canonical" href="https://rethread.lt/" />
+    <link rel="alternate" hreflang="lt-LT" href="https://rethread.lt/" />
+    <link rel="alternate" hreflang="x-default" href="https://rethread.lt/" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="lt_LT" />
     <meta property="og:site_name" content="Rethread" />
-    <meta property="og:title" content="Rethread — drabužių taisymas paštu" />
+    <meta property="og:title" content="Rethread — drabužių taisymas paštu visoje Lietuvoje" />
     <meta
       property="og:description"
-      content="Drabužių taisymas paštu visoje Lietuvoje. Aiškios kainos, paštomatu ir per 3–7 darbo dienas."
+      content="Atsiųskite drabužius paštomatu — sutvarkysime ir grąžinsime. Aiškios kainos, 3–7 darbo dienos ir 14 dienų taisymo garantija."
     />
     <meta property="og:url" content="https://rethread.lt/" />
     <meta property="og:image" content="https://rethread.lt/og.svg" />
+    <meta property="og:image:alt" content="Rethread - drabužių taisymas paštu visoje Lietuvoje" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Rethread — drabužių taisymas paštu" />
+    <meta name="twitter:title" content="Rethread — drabužių taisymas paštu visoje Lietuvoje" />
     <meta
       name="twitter:description"
-      content="Drabužių taisymas paštu visoje Lietuvoje. Aiškios kainos, paštomatu ir per 3–7 darbo dienas."
+      content="Atsiųskite drabužius paštomatu — sutvarkysime ir grąžinsime. Aiškios kainos, 3–7 darbo dienos ir 14 dienų taisymo garantija."
     />
     <meta name="twitter:image" content="https://rethread.lt/og.svg" />
+    <!-- SEO:end -->
 
     <!-- Self-hosted fonts (no external requests) -->
     <link rel="preload" href="/fonts/bricolage-latin-1.woff2" as="font" type="font/woff2" crossorigin />
@@ -42,12 +51,40 @@
     <a class="skip-link" href="#main">Pereiti prie turinio</a>
     <div id="app"></div>
     <noscript>
-      <div style="padding: 2rem; font-family: sans-serif">
-        <h1>Rethread</h1>
+      <div style="padding: 2rem; font-family: system-ui, sans-serif; line-height: 1.5; max-width: 760px">
+        <h1>Rethread — drabužių taisymas paštu visoje Lietuvoje</h1>
         <p>
-          Drabužių taisymas paštu visoje Lietuvoje. Šiai svetainei reikia
-          įjungto JavaScript. Parašykite mums: business@rethread.lt
+          Atsiųskite drabužius paštomatu arba kurjeriu — sutvarkysime ir
+          grąžinsime. Klientai internetu pasirenka taisymus, pateikia užklausą,
+          gauna patvirtinimą su apmokėjimo bei siuntimo instrukcijomis ir
+          atgauna sutaisytus drabužius.
         </p>
+        <h2>Pagrindinės paslaugos</h2>
+        <ul>
+          <li>kelnių, sijonų, suknelių ir rankovių trumpinimas;</li>
+          <li>užtrauktukų keitimas ir taisymas;</li>
+          <li>skylių, plyšimų ir siūlių tvarkymas;</li>
+          <li>sagų tvirtinimas ir keitimas;</li>
+          <li>drabužių siaurinimas ir pritaikymas.</li>
+        </ul>
+        <p>
+          Interaktyviai taisymo skaičiuoklei ir užsakymo formai reikia įjungto
+          JavaScript.
+        </p>
+        <p>
+          Kontaktai:
+          <a href="mailto:business@rethread.lt">business@rethread.lt</a>
+        </p>
+        <nav aria-label="Svarbios nuorodos">
+          <a href="/kaip-tai-veikia">Kaip tai veikia</a> ·
+          <a href="/taisymas">Taisymai</a> ·
+          <a href="/uzsakymas">Užsakymo užklausa</a> ·
+          <a href="/kontaktai">Kontaktai</a> ·
+          <a href="/pristatymas-ir-grazinimas">Pristatymas ir grąžinimas</a> ·
+          <a href="/garantija">Garantija</a> ·
+          <a href="/taisykles">Taisyklės</a> ·
+          <a href="/privatumo-politika">Privatumo politika</a>
+        </nav>
       </div>
     </noscript>
     <script type="module" src="/src/main.ts"></script>
