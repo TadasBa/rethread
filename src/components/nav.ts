@@ -9,7 +9,7 @@ import { wordmark } from "./wordmark";
 import { S } from "../i18n/strings";
 
 const LINKS: Array<{ href: string; label: string }> = [
-  { href: "/kaip-veikia", label: S.nav.how },
+  { href: "/kaip-tai-veikia", label: S.nav.how },
   { href: "/taisymas", label: S.nav.estimator },
   { href: "/zurnalas", label: S.nav.journal },
   { href: "/duk", label: S.nav.faq },

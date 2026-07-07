@@ -138,7 +138,7 @@ const lt = {
       {
         code: "05",
         title: "Grąžiname ir apmokate",
-        body: "Grąžiname drabužį jums. Apmokėti galima kortele, „Paysera“, „PayPal“ ar „Apple Pay“. 14 dienų garantija.",
+        body: "Patvirtinę užklausą atsiųsime apmokėjimo nuorodą ir siuntimo instrukcijas. Sutaisytą drabužį grąžinsime jums, o atliktam taisymui taikoma 14 dienų garantija.",
       },
     ],
     shippingTitle: "Siuntimas ir grąžinimas",
@@ -175,7 +175,7 @@ const lt = {
 
   order: {
     title: "Užsakymo užklausa",
-    lead: "Papasakokite apie drabužį — atsiųsime patvirtinimą su kaina ir siuntimo instrukcijomis per vieną darbo dieną.",
+    lead: "Papasakokite apie drabužį — po užklausos patvirtinimo atsiųsime apmokėjimo nuorodą ir siuntimo instrukcijas per vieną darbo dieną.",
     back: "Į skaičiuoklę",
     summaryTitle: "Jūsų taisymo sąrašas",
     emptySummary: "Sąrašas tuščias. Grįžkite į skaičiuoklę ir pasirinkite taisymus.",
@@ -206,7 +206,7 @@ const lt = {
     submit: "Pateikti užklausą",
     submitting: "Siunčiama…",
     successTitle: "Užklausa gauta — ačiū!",
-    successBody: "Per vieną darbo dieną atsiųsime patvirtinimą su kaina ir siuntimo instrukcijomis. Patikrinkite ir šlamšto aplanką.",
+    successBody: "Per vieną darbo dieną atsiųsime patvirtinimą su apmokėjimo nuoroda ir siuntimo instrukcijomis. Patikrinkite ir šlamšto aplanką.",
     successCta: "Grįžti į pradžią",
     errorTitle: "Nepavyko išsiųsti.",
     errorBody: "Pabandykite dar kartą arba parašykite mums tiesiogiai.",
@@ -216,6 +216,7 @@ const lt = {
       name: "Įrašykite vardą",
       email: "Įrašykite teisingą el. paštą",
       consent: "Reikia jūsų sutikimo, kad galėtume susisiekti",
+      verification: "Patvirtinkite, kad formą pildo žmogus.",
     },
   },
 
@@ -253,7 +254,7 @@ const lt = {
       },
       {
         q: "Kaip apmokėti?",
-        a: "Kortele, per „Paysera“, „PayPal“ arba „Apple Pay“. Mokate gavę patvirtinimą ir apmokėjimo nuorodą.",
+        a: "Apmokėjimo nuorodą ir siuntimo instrukcijas atsiųsime po užklausos patvirtinimo. Tai nėra momentinis atsiskaitymas svetainėje.",
       },
       {
         q: "Ar galioja garantija?",

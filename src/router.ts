@@ -6,6 +6,16 @@
    - Uses the View Transitions API where available (respects reduced motion).
    ========================================================================== */
 
+import {
+  DEFAULT_IMAGE,
+  DEFAULT_IMAGE_ALT,
+  SITE_LOCALE,
+  canonicalUrl,
+  documentTitle,
+} from "./seo";
+
+const DEFAULT_ROBOTS = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
+
 export interface RouteContext {
   path: string;
   params: Record<string, string>;
@@ -16,6 +26,7 @@ export interface RouteMeta {
   title: string;
   description: string;
   robots?: string;
+  type?: "website" | "article";
 }
 
 export interface Route {
@@ -28,10 +39,6 @@ interface CompiledRoute extends Route {
   regex: RegExp;
   keys: string[];
 }
-
-const SITE = "Rethread";
-const SITE_ORIGIN = "https://rethread.lt";
-const DEFAULT_IMAGE = `${SITE_ORIGIN}/og.svg`;
 
 function compile(pattern: string): { regex: RegExp; keys: string[] } {
   const keys: string[] = [];
@@ -124,17 +131,21 @@ export class Router {
   private async resolve(path: string): Promise<void> {
     const { route, ctx } = this.match(path);
     const meta = route.meta(ctx);
-    document.title = ctx.path === "/" ? `${SITE} — ${meta.title}` : `${meta.title} · ${SITE}`;
+    document.title = documentTitle(ctx.path, meta.title);
     setMeta("description", meta.description);
-    setMeta("robots", meta.robots ?? "index, follow");
+    setMeta("robots", meta.robots ?? DEFAULT_ROBOTS);
+    setMeta("og:type", meta.type ?? "website", "property");
+    setMeta("og:locale", SITE_LOCALE, "property");
     setMeta("og:title", document.title, "property");
     setMeta("og:description", meta.description, "property");
-    setMeta("og:url", SITE_ORIGIN + ctx.path, "property");
+    setMeta("og:url", canonicalUrl(ctx.path), "property");
     setMeta("og:image", DEFAULT_IMAGE, "property");
+    setMeta("og:image:alt", DEFAULT_IMAGE_ALT, "property");
+    setMeta("twitter:card", "summary_large_image");
     setMeta("twitter:title", document.title);
     setMeta("twitter:description", meta.description);
     setMeta("twitter:image", DEFAULT_IMAGE);
-    setCanonical(SITE_ORIGIN + ctx.path);
+    setCanonical(canonicalUrl(ctx.path));
 
     const view = await route.render(ctx);
     const swap = (): void => {

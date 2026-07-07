@@ -6,10 +6,11 @@
   "description": "Rethread — Lithuanian clothing repair service. Custom Vite + TS front end, deployed to Cloudflare Pages.",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build && node scripts/gen-sitemap.mjs",
+    "build": "tsc --noEmit && vite build && node scripts/gen-seo.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm run build",
+    "test": "node --test scripts/order-core.test.mjs",
+    "check": "npm run typecheck && npm test && npm run build",
     "pages:dev": "wrangler pages dev dist --compatibility-date=2024-11-01",
     "fonts": "node scripts/fetch-fonts.mjs"
   },

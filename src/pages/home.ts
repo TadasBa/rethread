@@ -52,7 +52,7 @@ export function renderHome(): HTMLElement {
           "div.hero__actions",
           { "data-reveal": true },
           h("a.btn.btn--accent", { href: "/taisymas" }, S.hero.ctaPrimary),
-          h("a.btn.btn--ghost", { href: "/kaip-veikia" }, S.hero.ctaSecondary),
+          h("a.btn.btn--ghost", { href: "/kaip-tai-veikia" }, S.hero.ctaSecondary),
         ),
       ),
       h(
