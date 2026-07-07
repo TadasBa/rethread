@@ -35,7 +35,6 @@ const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | u
 declare global {
   interface Window {
     turnstile?: {
-      ready: (callback: () => void) => void;
       render: (container: HTMLElement | string, options: Record<string, unknown>) => string;
       reset: (widgetId?: string) => void;
       getResponse?: (widgetId?: string) => string | undefined;
@@ -44,6 +43,7 @@ declare global {
 }
 
 let turnstileScript: Promise<void> | null = null;
+const TURNSTILE_ONLOAD = "__rethreadTurnstileLoaded";
 
 function loadTurnstile(): Promise<void> {
   if (window.turnstile) return Promise.resolve();
@@ -56,13 +56,24 @@ function loadTurnstile(): Promise<void> {
       existing.addEventListener("error", () => reject(new Error("turnstile_load_failed")), { once: true });
       return;
     }
+    let settled = false;
+    const finish = (): void => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+    const fail = (): void => {
+      if (settled) return;
+      settled = true;
+      reject(new Error("turnstile_load_failed"));
+    };
+    (window as unknown as Record<string, () => void>)[TURNSTILE_ONLOAD] = finish;
     const script = document.createElement("script");
-    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
-    script.async = true;
+    script.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=${TURNSTILE_ONLOAD}`;
     script.defer = true;
     script.dataset.turnstile = "true";
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("turnstile_load_failed"));
+    script.onload = () => { if (window.turnstile) finish(); };
+    script.onerror = fail;
     document.head.appendChild(script);
   });
 
@@ -291,24 +302,22 @@ export function renderOrder(): HTMLElement {
     }
     loadTurnstile()
       .then(() => {
-        window.turnstile?.ready(() => {
-          if (!window.turnstile || turnstileWidgetId || !turnstileBox.isConnected) return;
-          turnstileWidgetId = window.turnstile.render(turnstileBox, {
-            sitekey: TURNSTILE_SITE_KEY,
-            theme: "light",
-            callback: (token: string) => {
-              turnstileToken = token;
-              turnstileErr.textContent = "";
-              resolveTurnstileWaiters(token);
-            },
-            "expired-callback": () => {
-              turnstileToken = "";
-            },
-            "error-callback": () => {
-              turnstileToken = "";
-              rejectTurnstileWaiters(new Error("turnstile_error"));
-            },
-          });
+        if (!window.turnstile || turnstileWidgetId || !turnstileBox.isConnected) return;
+        turnstileWidgetId = window.turnstile.render(turnstileBox, {
+          sitekey: TURNSTILE_SITE_KEY,
+          theme: "light",
+          callback: (token: string) => {
+            turnstileToken = token;
+            turnstileErr.textContent = "";
+            resolveTurnstileWaiters(token);
+          },
+          "expired-callback": () => {
+            turnstileToken = "";
+          },
+          "error-callback": () => {
+            turnstileToken = "";
+            rejectTurnstileWaiters(new Error("turnstile_error"));
+          },
         });
       })
       .catch(() => {
