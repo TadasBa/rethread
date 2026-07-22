@@ -78,3 +78,47 @@ test("rejects malformed or incomplete payloads", () => {
   assert.equal(validateOrderPayload({ ...validPayload, consent: false }).ok, false);
   assert.equal(validateOrderPayload({ ...validPayload, repairIds: [] }).ok, false);
 });
+
+test("normalizes customer input and removes duplicate repair IDs", () => {
+  const result = validateOrderPayload({
+    ...validPayload,
+    name: "  Austėja  ",
+    email: "  AUSTEJA@EXAMPLE.COM  ",
+    repairIds: ["shortening", "shortening"],
+  });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.order.name, "Austėja");
+  assert.equal(result.order.email, "austeja@example.com");
+  assert.deepEqual(result.order.repairs.map(({ id }) => id), ["shortening"]);
+  assert.equal(result.order.totalPrice, 15);
+});
+
+test("rejects unsupported, oversized, and excessive photos", () => {
+  const photo = { name: "repair.jpg", type: "image/jpeg", base64: "YWJj" };
+
+  assert.deepEqual(
+    validateOrderPayload({ ...validPayload, photos: [{ ...photo, type: "image/gif" }] }),
+    { ok: false, status: 422, error: "invalid_photo_type" },
+  );
+  assert.deepEqual(
+    validateOrderPayload({ ...validPayload, photos: [{ ...photo, base64: "a".repeat(5_700_001) }] }),
+    { ok: false, status: 413, error: "photo_too_large" },
+  );
+  assert.deepEqual(
+    validateOrderPayload({ ...validPayload, photos: Array.from({ length: 6 }, () => photo) }),
+    { ok: false, status: 413, error: "too_many_photos" },
+  );
+});
+
+test("limits free-text fields before they reach email templates", () => {
+  const result = validateOrderPayload({
+    ...validPayload,
+    notes: "n".repeat(1_100),
+    repairDetails: { shortening: "d".repeat(400) },
+  });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.order.notes.length, 1_000);
+  assert.equal(result.order.repairs[0].detail.length, 300);
+});

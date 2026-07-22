@@ -10,3 +10,5 @@ dist/
 .DS_Store
 *.log
 npm-debug.log*
+playwright-report/
+test-results/

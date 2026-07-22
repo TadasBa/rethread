@@ -17,6 +17,7 @@ Custom website for **Rethread**, a Lithuanian mail-in clothing repair service.
 
 ```bash
 npm install
+npx playwright install chromium # one-time browser setup for tests
 npm run dev
 npm test
 npm run check

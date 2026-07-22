@@ -29,6 +29,8 @@ interface Photo {
 
 const MAX_PHOTOS = 5;
 const MAX_BYTES = 4 * 1024 * 1024;
+const PHOTO_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/heic", "image/heif"];
+const allowedPhotoTypes = new Set(PHOTO_TYPES);
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
 
@@ -221,7 +223,7 @@ export function renderOrder(): HTMLElement {
   const photos: Photo[] = [];
   const photoList = h("ul.photos__list");
   const photoInput = h("input", {
-    type: "file", id: "f-photos", accept: "image/*", multiple: true, class: "photos__input visually-hidden",
+    type: "file", id: "f-photos", accept: PHOTO_TYPES.join(","), multiple: true, class: "photos__input visually-hidden",
   }) as HTMLInputElement;
   const photoErr = h("span.field__error", { "aria-live": "polite" });
 
@@ -244,6 +246,7 @@ export function renderOrder(): HTMLElement {
     const files = Array.from(photoInput.files ?? []);
     for (const file of files) {
       if (photos.length >= MAX_PHOTOS) { photoErr.textContent = S.order.photoTooMany; break; }
+      if (!allowedPhotoTypes.has(file.type.toLowerCase())) { photoErr.textContent = S.order.photoUnsupported; continue; }
       if (file.size > MAX_BYTES) { photoErr.textContent = S.order.photoTooBig; continue; }
       photos.push(await readFile(file));
     }
