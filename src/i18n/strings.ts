@@ -210,6 +210,7 @@ const lt = {
     successCta: "Grįžti į pradžią",
     errorTitle: "Nepavyko išsiųsti.",
     errorBody: "Pabandykite dar kartą arba parašykite mums tiesiogiai.",
+    photoUnsupported: "Nepalaikomas nuotraukos formatas. Naudokite JPEG, PNG, WebP arba HEIC.",
     photoTooBig: "Kai kurios nuotraukos per didelės (viršija 4 MB) ir buvo praleistos.",
     photoTooMany: "Galima pridėti iki 5 nuotraukų.",
     validation: {
