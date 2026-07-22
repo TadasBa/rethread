@@ -58,7 +58,7 @@ export function buildEstimator(pendingAdd?: RepairId): HTMLElement {
   function renderPicker(): void {
     clear(garmentPickerEl);
     const { garment } = estimate.get();
-    for (const g of GARMENTS) {
+    for (const [index, g] of GARMENTS.entries()) {
       const active = garment === g.id;
       const card = h(
         "button.picker__card",
@@ -66,8 +66,27 @@ export function buildEstimator(pendingAdd?: RepairId): HTMLElement {
           type: "button",
           role: "radio",
           "aria-checked": String(active),
+          tabindex: active || (!garment && index === 0) ? "0" : "-1",
           "data-garment": g.id,
-          onclick: () => selectGarment(g.id),
+          onclick: () => selectGarment(g.id, true),
+          onkeydown: (event: KeyboardEvent) => {
+            const directions: Record<string, number> = {
+              ArrowRight: 1,
+              ArrowDown: 1,
+              ArrowLeft: -1,
+              ArrowUp: -1,
+            };
+            let next = index;
+            if (event.key === "Home") next = 0;
+            else if (event.key === "End") next = GARMENTS.length - 1;
+            else if (event.key in directions) {
+              next = (index + directions[event.key] + GARMENTS.length) % GARMENTS.length;
+            } else {
+              return;
+            }
+            event.preventDefault();
+            selectGarment(GARMENTS[next].id, true);
+          },
         },
         h("span.picker__icon", { role: "presentation" }),
         h("span.picker__label", {}, g.label),
@@ -79,7 +98,7 @@ export function buildEstimator(pendingAdd?: RepairId): HTMLElement {
     }
   }
 
-  function selectGarment(id: GarmentId): void {
+  function selectGarment(id: GarmentId, restoreFocus = false): void {
     const prev = estimate.get().garment;
     estimate.setGarment(id);
     if (prev !== id) {
@@ -95,6 +114,9 @@ export function buildEstimator(pendingAdd?: RepairId): HTMLElement {
       pending = null;
     }
     renderAll();
+    if (restoreFocus) {
+      garmentPickerEl.querySelector<HTMLElement>(`[data-garment="${id}"]`)?.focus();
+    }
     announce(`${S.estimator.liveGarment}: ${garmentById(id).label}`);
   }
 
